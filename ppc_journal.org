@@ -1,0 +1,305 @@
+#+TITLE: Paper, scissors, rocks
+
+* Objectif
+
+Évaluer les compétences en TypeScript (React, NextJs et Node.js)
+Création d'une web application implémentant le jeu =Paper, scissors, rocks=.
+Tout joueur doit pouvoir  entrer son nom et jouer.
+Nécessité de créer un tableau de classement qui sera sauvegardé en base de données.
+
++ Pour pouvoir jouer, un joueur doit entre son nom.
++ Le tableau de classement présente 10 joueurs, il est archivé en base de données.
++ Le tableau présente le nom des joueurs ainsi que leurs scores.  
++ À la fin de chaque tour, l'application sauvegarde le score du joueur et met à jour la base de données.
++ Existence d'un bouton reset pour permettre à un joueur de commencer un nouveau tour.
++ Interface graphique doit être visuellement plaisante et facile à appréhender.
++ La logique du jeu doit être développée par une API backend.  
+
+  
+* Création du projet
+
+** Premier jet
+npx create-next-app@latest ./ --ts --use-npm
+npm install prisma --save-dev
+npx prisma init
+npx prisma db pull (?)
+npx prisma generate
+npm install @nextui-org/react (?)
+
+** Deuxième jet
+
+npx create-next-app@latest ./ --ts --use-npx
+npm install drizzle-orm mysql2
+npx shadcn-ui@latest init
+
+* Algo pierre, papier, ciseaux
+
+** Problématiques
+9 cas possibles : 3 égalités et 6 victoires
+
+pierre = 0
+papier = 1
+ciseaux = 2
+
+pierre vs papier => papier
+0 & 1 => 1
+
+papier vs pierre => papier
+1 & 0 => 1
+
+pierre vs ciseaux => pierre
+0 & 2 => 0
+
+ciseaux vs pierre => pierre
+2 & 0 => 0
+
+papier vs ciseaux => ciseaux
+1 & 2 => 2
+
+ciseaux vs papier => ciseaux
+2 & 1 => 2
+
+pierre vs pierre => pierre
+0 & 0 => 0
+papier vs papier => papier
+1 & 1 => 1
+ciseaux vs ciseaux => ciseaux
+2 & 2 => 2
+
+** Algo js
+
+#+begin_src js :tangle ztank/algo.js
+
+//let cas = [0,1,2]
+//const choix = {0:'pierre',1:'papier',2:'ciseaux'}
+
+const regles  = (x,y) => {
+
+    let retour;
+    
+    switch(true){
+    case x === y:
+	//Égalité
+	//Aucun perdant, pierre vs pierre ou papier vs papier ou ciseaux vs ciseaux
+	retour = [true, true] ; 
+	break;
+
+    case x == 0 && y == 1:
+	//pierre vs papier => papier gagne
+	retour = [false, true];
+	break;
+
+    case x == 1 && y == 0:
+	//papier vs pierre => papier gagne
+	retour = [true, false];
+	break;
+
+    case x == 0 && y == 2:
+	//pierre vs ciseaux => pierre gagne
+	retour = [true, false];
+	break;
+	
+    case x == 2 && y == 0:
+	//ciseaux vs pierre => ciseaux gagnent
+	retour = [false, true];
+	break;
+
+    case x == 1 && y == 2:
+	//papier vs ciseaux => ciseaux gagnent
+	retour = [false, true];
+	break;
+	
+    case x == 2 && y == 1:
+	//ciseaux vs papier => ciseaux gagnent
+	retour = [true, false];
+	break;
+
+    default:
+	//Aucun perdant, égalité
+	retour = [true, true];
+    };
+    
+    return retour;
+};
+
+//Tests des différents cas possibles, si x et y sont des entiers
+console.log("pierre vs pierre", regles(0,0));
+console.log("papier vs papier", regles(1,1));
+console.log("ciseaux vs ciseaux", regles(2,2));
+
+console.log("pierre vs papier",regles(0,1));
+console.log("papier vs pierre",regles(1,0));
+
+console.log("pierre vs ciseaux",regles(0,2));
+console.log("ciseaux vs pierre",regles(2,0));
+
+console.log("papier vs ciseaux",regles(1,2));
+console.log("ciseaux vs papier",regles(2,1));
+
+console.log("inconnu vs inconnu",regles(12,21));
+console.log("inconnu vs inconnu",regles(3,4));
+
+#+end_src
+
+#+begin_src typescript
+
+const regles = (x: number, y:number): [boolean, boolean] => {
+
+    let retour: [boolean, boolean];
+
+    switch(true){
+	case x === y:
+	    //Égalité
+	    //Aucun perdant, pierre vs pierre ou papier vs papier ou ciseaux vs ciseaux
+	    retour = [true, true] ; 
+	    break;
+
+	case x == 0 && y == 1:
+	    //pierre vs papier => papier gagne
+	    retour = [false, true];
+	    break;
+
+	case x == 1 && y == 0:
+	    //papier vs pierre => papier gagne
+	    retour = [true, false];
+	    break;
+
+	case x == 0 && y == 2:
+	    //pierre vs ciseaux => pierre gagne
+	    retour = [true, false];
+	    break;
+	    
+	case x == 2 && y == 0:
+	    //ciseaux vs pierre => ciseaux gagnent
+	    retour = [false, true];
+	    break;
+
+	case x == 1 && y == 2:
+	    //papier vs ciseaux => ciseaux gagnent
+	    retour = [false, true];
+	    break;
+	    
+	case x == 2 && y == 1:
+	    //ciseaux vs papier => ciseaux gagnent
+	    retour = [true, false];
+	    break;
+
+	default:
+	    //Aucun perdant, égalité
+	    retour = [true, true];
+    };
+    
+    return retour;
+}
+
+
+#+end_src
+
+* Dbase : schéma
+
+** Problématique
+id joueur
+nom joueur
+prenom joueur
+points joueur
+
+2 tables, une pour les joueurs et leurs id, l'autre pour les scores
+liste fictives ? 
+
+#+begin_example
+id,prenom,nom,points
+1,Maxime,Lamothe,-8
+2,Romain,Latterrade,29
+3,Ugo,Boniface,-20
+4,Sipili,Falatea,-10
+5,Matis,Perchaud,12
+6,Jefferson,Poirot,-10
+7,Carlü,Sadie,3
+8,Ben,Tameifuna,13
+9,Cyril,Cazeaux,7
+10,Adam,Coleman,-17
+11,Jonny,Gray,20
+12,Guido,Petti,-16
+13,Alexandre,Ricard,30
+14,Pierre,Bochaton,13
+15,Mahamadou,Diaby,17
+16,Marko,Gazzotti,17
+17,Pete,Samu,-11
+18,Lachlan,Swinton,23
+19,Tevita,Tatafu,-19
+20,Bastien,Vergnes-Taillefer,22
+21,Paul,Abadie,-7
+22,Yann,Lesgourgues,1
+23,Maxime,Lucu,13
+24,Joey,Carbery,-24
+25,Mateo,Garcia,29
+26,Matthieu,Jalibert,17
+27,Nicolas,Depoortère,-27
+28,Rohan,Janse van Rensburg,23
+29,Yoram,Moefana,-23
+30,Ben,Tapuai,-23
+31,Pablo,Uberti,22
+32,Tani,Vili,26
+33,Louis,Bielle-Biarrey,16
+34,Nans,Ducuing,23
+35,Damian,Penaud,7
+36,Enzo,Reybier,8
+37,Romain,Buros,-15
+#+end_example
+
+** Schéma sql
+
+#+begin_src sql :tangle pierrePapierCiseaux.sql
+
+USE pierre_papier_ciseaux;
+
+DROP TABLE IF EXISTS joueurs;
+CREATE TABLE joueurs (
+joueurId INT AUTO_INCREMENT PRIMARY KEY,
+nom VARCHAR(255) NOT NULL,
+prenom varchar(255) NOT NULL,
+motpasse varchar(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS scores;
+CREATE TABLE scores (
+id INT,
+points INT NOT NULL DEFAULT 0,
+FOREIGN KEY (id) REFERENCES joueurs(joueurId)
+);
+
+INSERT INTO joueurs VALUES (prenom, mon) VALUES
+
+INSERT INTO joueurs values (prenom, nom) values ("Maxime","Lamothe"),("Romain","Latterrade"),("Ugo","Boniface"),("Sipili","Falatea"),("Matis","Perchaud"),("Jefferson","Poirot"),("Carlü","Sadie"),("Ben","Tameifuna"),("Cyril","Cazeaux"),("Adam","Coleman"),("Jonny","Gray"),("Guido","Petti"),("Alexandre","Ricard"),("Pierre","Bochaton"),("Mahamadou","Diaby"),("Marko","Gazzotti"),("Pete","Samu"),("Lachlan","Swinton"),("Tevita","Tatafu"),("Bastien","Vergnes-Taillefer"),("Paul","Abadie"),("Yann","Lesgourgues"),("Maxime","Lucu"),("Joey","Carbery"),("Mateo","Garcia"),("Matthieu","Jalibert"),("Nicolas","Depoortère"),("Rohan","Janse van Rensburg"),("Yoram","Moefana"),("Ben","Tapuai"),("Pablo","Uberti"),("Tani","Vili"),("Louis","Bielle-Biarrey"),("Nans","Ducuing"),("Damian","Penaud"),("Enzo","Reybier"),("Romain","Buros");
+
+#+end_src
+api :
++ existence joueur : requête avec numéro id
++ création joueur : id, nom, prenom, motpasse, points=0
++ mise à jour points joueur
++ 10 meilleurs score si joueur est dans le top 10 / 9 meilleurs scores + score du joueur
+
+** Choix de prisma pour l'orm
+Il servira également pour l'authentification.
+
+** Finalement drizzle, car difficulté d'installation de prisma
+Erreur P1001 Can't reach database server at `localhost`:`3306`
+
+* Interface
+Icones
+https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissors.svg
+
+U+1F44D 👍
+U+1F44E 👎
+
+Ou alors couleurs pour signaler le vainqueur
+
+Page d'accueil avec le tableau des 10 meilleurs scores
+Avec également un champs de connexion quien cas d'autorisation  basculera sur la page de jeu
+
+Page de jeu 2x3 boutons pour =pierre=, =papier=, =ciseaux= : joueur et ordinateur
+En plus un quatrième bouton indiquant la victoire ou la défaite
+
+heroicons/react pour les autres icones
+
+finalement shadcn

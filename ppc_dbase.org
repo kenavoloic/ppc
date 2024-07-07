@@ -1,0 +1,373 @@
+:PROPERTIES:
+:header-args+: :results table
+:header-args+: :engine mysql
+:header-args+: :dbhost localhost
+:header-args+: :dbuser claude
+:header-args+: :database ppc
+:header-args+: :dbpassword claude
+:END:
+ 
+
+#+begin_src sql
+drop table scores;
+drop table joueurs;     	
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+DROP TABLE IF EXISTS joueurs;
+CREATE TABLE joueurs (
+joueurId INT AUTO_INCREMENT PRIMARY KEY,
+nom VARCHAR(255) NOT NULL,
+prenom varchar(255) NOT NULL,
+motpasse varchar(255) NOT NULL       
+);
+
+
+DROP TABLE IF EXISTS scores;
+CREATE TABLE scores (
+id INT,
+joueur INT,   
+points INT NOT NULL DEFAULT 0,
+FOREIGN KEY (joueur) REFERENCES joueurs(joueurId) ON UPDATE CASCADE
+);
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+
+#+begin_src sql 
+DROP TRIGGER IF EXISTS ajout_joueur;	
+
+DELIMITER $$
+CREATE TRIGGER ajout_joueur
+-- Se déclenche automatiquement quand un nouveau joueur est ajouté à la table joueurs
+-- Crée un nouveau joueur dans la table scores
+AFTER INSERT ON joueurs
+FOR EACH row
+BEGIN
+INSERT INTO scores (id, points) VALUES (NEW.joueurId, 0);
+END;
+$$
+
+DELIMITER ;
+#+end_src
+
+#+begin_src sql
+DROP PROCEDURE IF EXISTS nouveau_joueur;
+
+DELIMITER $$
+CREATE PROCEDURE nouveau_joueur(IN _nom varchar(255), IN _prenom varchar(255), IN _motpasse varchar(255))
+-- Insertion d'un nouveau joueur
+
+BEGIN
+DECLARE retour TINYINT(1) DEFAULT 0;
+DECLARE nombre INT;
+INSERT INTO joueurs (nom, prenom, motpasse) values (_nom, _prenom, SHA2(_motpasse, 256));
+SET retour = 1;
+
+SELECT retour;
+END;
+$$
+#+end_src
+
+#+RESULTS:
+|---|
+
+
+#+begin_src sql
+DROP PROCEDURE IF EXISTS mise_a_jour_points;
+
+DELIMITER $$
+CREATE PROCEDURE mise_a_jour_points(_joueur INT, _score INT)
+-- Mise à jour du score de _joueur si _joueur existe
+-- Retourne 1 en cas de succès
+BEGIN
+DECLARE retour TINYINT(1) DEFAULT 0;
+DECLARE nombre INT;
+
+UPDATE scores SET points = _score WHERE joueur = _joueur;
+SELECT COUNT(*) INTO nombre FROM scores WHERE joueur = _joueur AND points = _score;
+
+IF (nombre = 1) THEN SET retour = 1;
+END IF;
+
+SELECT retour;
+
+END;
+$$
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+
+
+#+begin_src sql
+DROP PROCEDURE IF EXISTS authentification_joueur;
+
+DELIMITER $$
+CREATE PROCEDURE authentification_joueur(IN _nom varchar(255), IN _prenom varchar(255), IN _motpasse varchar(255))
+-- Simple authentification, si _nom, _prénom existent
+-- Si le hash de _motpasse correspond à celui de la table
+-- Alors le joueur est authentifié et retour = 1
+-- Si ce n'est pas le cas, retour = 0   
+BEGIN
+DECLARE retour TINYINT(1) DEFAULT 0;
+DECLARE nombre INT;
+DECLARE hash VARCHAR(255);
+
+SELECT motpasse INTO hash FROM joueurs WHERE nom = _nom AND prenom = _prenom LIMIT 1;
+
+IF hash = SHA2(_motpasse, 256) THEN
+SET retour = 1;
+END IF;
+
+SELECT retour;
+END;
+$$
+
+#+end_src
+
+#+begin_src sql 
+DROP PROCEDURE IF EXISTS classement;
+
+DELIMITER $$
+
+CREATE PROCEDURE classement(IN nombre INT)
+-- Retourne un classement des scores
+-- Si nombre > 1 retourne le top nombre
+-- Si nombre < 1  retourne le top 10
+BEGIN
+
+IF nombre > 0 THEN
+SELECT rank() over (order by points desc)  as 'Classement', s.points as 'Score', j.nom as 'Noms', j.prenom as 'Prénoms' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc limit nombre;
+ELSEIF nombre < 1 THEN
+SELECT RANK() OVER (ORDER BY points DESC)  AS 'Classement', s.points AS 'Score', j.nom AS 'Noms', j.prenom AS 'Prénoms' FROM scores s INNER JOIN joueurs j ON s.joueur = j.joueurId ORDER BY s.points DESC, j.nom ASC LIMIT 10;
+END IF;
+END;
+$$
+
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+DROP FUNCTION IF EXISTS classementJson;
+
+DELIMITER $$
+CREATE FUNCTION classementJson (IN nombre INT) RETURNS JSON NOT DETERMINISTIC READS SQL DATA
+BEGIN
+DECLARE retour JSON;
+
+-- select rank() over (order by points desc)  as 'Classement', s.points as 'Score', j.nom as 'Noms', j.prenom as 'Prénoms' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc limit 10;
+
+SET retour = (SELECT JSON_ARRAYAGG(JSON_OBJECT(
+-- 'classement', rank() over(order by points desc),
+'score', s.points,
+'nom', j.nom,
+'prenom', j.prenom))
+from scores s
+inner join joueurs j on s.joueur = j.joueurId
+order by s.points desc, j.nom asc limit nombre);
+
+RETURN retour;
+       
+END;
+$$
+#+end_src
+#+RESULTS:
+|---|
+
+Nouvelle mouture avec les mots de passes hashés et les noms et prénoms en minuscules
+#+begin_src sql
+INSERT INTO joueurs (prenom, nom, motpasse) VALUES 
+("maxime","lamothe", SHA2("bat",256)),
+("romain","latterrade", SHA2("bi",256)),
+("ugo","boniface", SHA2("hiru",256)),
+("sipili","falatea", SHA2("lau",256)),
+("matis","perchaud", SHA2("bost",256)),
+("jefferson","poirot", SHA2("sei",256)),
+("carlü","sadie", SHA2("zazpi",256)),
+("ben","tameifuna", SHA2("zortzi",256)),
+("cyril","cazeaux", SHA2("bederatzi",256)),
+("adam","coleman", SHA2("hamar",256)),
+("jonny","gray", SHA2("hamaika",256)),
+("guido","petti", SHA2("hamabi",256)),
+("alexandre","ricard", SHA2("hamahiru",256)),
+("pierre","bochaton", SHA2("hamalau",256)),
+("mahamadou","diaby", SHA2("hamabost",256)),
+("marko","gazzotti", SHA2("hamasei",256)),
+("pete","samu", SHA2("hamazazpi",256)),
+("lachlan","swinton", SHA2("hemezortzi",256)),
+("tevita","tatafu", SHA2("hemeretzi",256)),
+("bastien","vergnes-taillefer", SHA2("hogei",256)),
+("paul","abadie", SHA2("hogeitabat",256)),
+("yann","lesgourgues", SHA2("hogeitabi",256)),
+("maxime","lucu", SHA2("hogeitahiru",256)),
+("joey","carbery", SHA2("hogeitalau",256)),
+("mateo","garcia", SHA2("hogeita bost",256)),
+("matthieu","jalibert", SHA2("hogeitasei",256)),
+("nicolas","depoortère", SHA2("hogeitazazpi",256)),
+("rohan","janse van rensburg", SHA2("hogeitazortzi",256)),
+("yoram","moefana", SHA2("hogeitabederatzi",256)),
+("ben","tapuai", SHA2("hogueita hamar",256)),
+("pablo","uberti", SHA2("hogueita hamaika",256)),
+("tani","vili", SHA2("hogueita hamabi",256)),
+("louis","bielle-biarrey", SHA2("hogueita hamahiru",256)),
+("nans","ducuing", SHA2("hogueita hamalau",256)),
+("damian","penaud", SHA2("hogueita hamabost",256)),
+("enzo","reybier", SHA2("hogueita hamasei",256)),
+("romain","buros", SHA2("hogueita hamazazpi",256));	
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+INSERT INTO joueurs (prenom, nom) values  ("Maxime","Lamothe"),("Romain","Latterrade"),("Ugo","Boniface"),("Sipili","Falatea"),("Matis","Perchaud"),("Jefferson","Poirot"),("Carlü","Sadie"),("Ben","Tameifuna"),("Cyril","Cazeaux"),("Adam","Coleman"),("Jonny","Gray"),("Guido","Petti"),("Alexandre","Ricard"),("Pierre","Bochaton"),("Mahamadou","Diaby"),("Marko","Gazzotti"),("Pete","Samu"),("Lachlan","Swinton"),("Tevita","Tatafu"),("Bastien","Vergnes-Taillefer"),("Paul","Abadie"),("Yann","Lesgourgues"),("Maxime","Lucu"),("Joey","Carbery"),("Mateo","Garcia"),("Matthieu","Jalibert"),("Nicolas","Depoortère"),("Rohan","Janse van Rensburg"),("Yoram","Moefana"),("Ben","Tapuai"),("Pablo","Uberti"),("Tani","Vili"),("Louis","Bielle-Biarrey"),("Nans","Ducuing"),("Damian","Penaud"),("Enzo","Reybier"),("Romain","Buros");
+
+#+end_src
+
+#+begin_src sql
+update scores set points = 12 where id = 12;
+#+end_src
+
+#+begin_src sql
+call mise_a_jour_points(15, 9);	
+#+end_src
+
+#+RESULTS:
+| retour |
+|--------|
+|      1 |
+
+#+begin_src python  :results output
+import random
+a = [f"({x}, {random.randint(-10, 10)})" for x in range(1,38)]
+print(", ".join(a))
+#+end_src
+
+#+begin_src sql
+insert into scores (id, points) values
+(1, 6), (2, -11), (3, 28), (4, -27), (5, 25), (6, 2), (7, 26), (8, -20), (9, 27), (10, -27), (11, 23), (12, -6), (13, -22), (14, 3), (15, 20), (16, -2), (17, -23), (18, 0), (19, 23), (20, 12), (21, 12), (22, 27), (23, 25), (24, -24), (25, -13), (26, -2), (27, 18), (28, -22), (29, 2), (30, 29), (31, 4), (32, -17), (33, 22), (34, -6), (35, 26), (36, -15), (37, 26)       
+on duplicate key update
+points = VALUES(points);
+
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+select s.points as 'Score', j.nom as 'Noms', j.prenom as 'Prénoms' from scores s inner join joueurs j on s.id = j.joueurId order by s.points desc, j.nom asc limit 10;
+
+#+end_src
+
+#+RESULTS:
+| Score | Noms        | Prénoms |
+|-------+-------------+---------|
+|    29 | Tapuai      | Ben     |
+|    28 | Boniface    | Ugo     |
+|    27 | Cazeaux     | Cyril   |
+|    27 | Lesgourgues | Yann    |
+|    26 | Buros       | Romain  |
+|    26 | Penaud      | Damian  |
+|    26 | Sadie       | Carlü   |
+|    25 | Lucu        | Maxime  |
+|    25 | Perchaud    | Matis   |
+|    23 | Gray        | Jonny   |
+
+
+#+begin_src sql
+select rank() over (order by points desc)  as 'Classement', s.points as 'Score', j.nom as 'Noms', j.prenom as 'Prénoms' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc limit 5;
+	
+
+#+end_src
+
+#+RESULTS:
+| Classement | Score | Noms           | Prénoms |
+|------------+-------+----------------+---------|
+|          1 |    23 | balt           | hazar   |
+|          2 |    10 | bielle-biarrey | louis   |
+|          2 |    10 | perchaud       | matis   |
+|          4 |     9 | buros          | romain  |
+|          4 |     9 | cazeaux        | cyril   |
+
+
+#+begin_src sql
+select rank() over (order by points desc)  as 'Classement', s.points as 'Score', j.nom as 'Nom', j.prenom as 'Prénom', j.motpasse  as 'Hashé' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc;
+#+end_src
+
+#+RESULTS:
+| Classement | Score | Nom                | Prénom    | Hashé                                                            |
+|------------+-------+--------------------+-----------+------------------------------------------------------------------|
+|          1 |    10 | bielle-biarrey     | louis     | 96719485ec26278e3fe697cff019ed5f0b30bbf847994c397774f011c8a2e940 |
+|          1 |    10 | perchaud           | matis     | d0912d12c303501a3270af350d97977628c9b3c698c050a4ec17c1bba471497e |
+|          3 |     9 | buros              | romain    | 2dff7414311484f42f507dc59fc5a5d5e6d619fd112f7158b6332815ce92d0e7 |
+|          3 |     9 | cazeaux            | cyril     | cac45e02fb1575b4b88a562fccf020c3b76acf8363d61ea749877259ff9983d4 |
+|          3 |     9 | depoortère         | nicolas   | dfba3a4d08b1beae5fb0a2c93e840846559ea51839752c040e441e5868527a31 |
+|          3 |     9 | vergnes-taillefer  | bastien   | f814c28fd91b161c22d221921abae605b8698d96ffb00d6fae11e5a008d47e19 |
+|          7 |     8 | ducuing            | nans      | e49dc475e56b8c120332e812906d65d4ea85c5f343d6901cc3a0199d38813c49 |
+|          7 |     8 | poirot             | jefferson | 6a26e2b7a5361812d59abe94ccb471f9f3a8877c730f10a8e8d49df28d27a43e |
+|          9 |     7 | diaby              | mahamadou | 284711f2f224a1ec0861148d9b4507f214eb03d9d6e800c68af4f0259cc76238 |
+|         10 |     6 | samu               | pete      | 5f409478db93440625c8e0d7629a33fb3efee1bdbdddbfc7c1d15992a435b846 |
+|         10 |     6 | tameifuna          | ben       | fefb345272e90c0daf246ef35c505477a52a07869be25cdb7ca14f8f4c7eacc5 |
+|         12 |     5 | carbery            | joey      | dad6c2fda0e56c2ff4fb9ebb3331465aee7b938e4a59baec95d4995b6cae5ecc |
+|         12 |     5 | ricard             | alexandre | d07495b057ce3af5702b61b9d99e217d00ed7b014e7c07e03059c2a5b34fe81b |
+|         14 |     4 | garcia             | mateo     | 98d169d524999bbf6a1c2ea568af0751fc79c38d459220c258725ba43d940e4d |
+|         14 |     4 | tatafu             | tevita    | 04b12bb10f09a9bd8b10c9ae53c24c6501e7ecfc6f1381667604360a283adf1e |
+|         16 |     3 | coleman            | adam      | 985a12e0f618c3f663290b9ed599b7a1f505a22e821d06c2f235f47cd781d31c |
+|         17 |     2 | jalibert           | matthieu  | 18ae1dcb17d0429906070a9325aa3c5595c2fe1034fb29d7ac43166c7a1406aa |
+|         18 |     1 | lamothe            | maxime    | ca5bcec12f716f44d9745d349cc80422f0d14cbab09329caf533bef7c2d952eb |
+|         18 |     1 | sadie              | carlü     | 37700ceb09a92d98b757374f55a364f5bd2277c14e8c085a8c13b3553b8e30ca |
+|         20 |     0 | falatea            | sipili    | 1f866d986ecb0367af29aaeab9c870a063f50043ac05ed4b1a8fad9d6fc895cd |
+|         21 |    -1 | vili               | tani      | e7aa66867d75b2670f38bec2d9bbc8a7de7dad0657bc447964b28e009f021572 |
+|         22 |    -2 | uberti             | pablo     | 2302af443f62375069b7bbf4dbd94fecffbcb0daaccd7e739c27a6af7bfc3425 |
+|         23 |    -3 | lesgourgues        | yann      | ff880c39932d4335bca045fe133343a310aec865f1e984d7d45f516c70f5a531 |
+|         23 |    -3 | reybier            | enzo      | 1433d19a29cd69c697aab502fcdded4d9720f690bc1435453ee52e7a71cab84d |
+|         25 |    -4 | boniface           | ugo       | e82bb7ef1e91f0e416a2a2601f1d1acb85abf95cb817150969323fee814afea0 |
+|         26 |    -5 | abadie             | paul      | 58f9704940f8a35e706aafd1c20b07431dedae5f84b302c7557a3d62ab9e916e |
+|         26 |    -5 | penaud             | damian    | fdffb67e137965a4d3340aeff3c3c0b50a39276c18d3d6ee56bab9405d76a25c |
+|         28 |    -6 | bochaton           | pierre    | 76d9dc41e5176e67a90e51ba200faadf7e280892585d6dd1e1b1a4ed51a5ad99 |
+|         28 |    -6 | lucu               | maxime    | 79b0ec8d9735b81efba32a71035772d9946932d4dcc35d249ad62f87df4da14a |
+|         28 |    -6 | moefana            | yoram     | ae71f5652b6a80c0439f34d274681cd421e7428599e517792d6a547d09cffd2a |
+|         31 |    -7 | tapuai             | ben       | 04e33d70e2d75d1e6772bff49108b0315c99c2b7eac8078848ec2205b3be6408 |
+|         32 |    -8 | gray               | jonny     | c724d76d62bd97b085ae7f094c031ca79156c10190521d152f627e5a638925e1 |
+|         32 |    -8 | janse van rensburg | rohan     | 6be3b469c0e81d9a7d25b872ecfccba79759f4412caa4f5f0a529c963eea3fe9 |
+|         32 |    -8 | latterrade         | romain    | d9065d6da185ec28758619fc14b755f740043e1060d342aacef26f459fae8d9d |
+|         32 |    -8 | petti              | guido     | 47c98e0d833f9641f08804e95a26c1228b75d60af6309b984dc149057b3342ff |
+|         32 |    -8 | swinton            | lachlan   | 8a6d3d77fe82232d61c458e42caa600bfd19da4f71c99324aa8bb863352e1d1a |
+|         37 |   -10 | gazzotti           | marko     | f249859b102d5fbe4972c4823e6c3d2a41c7f760bd6619298b87b9af3727c957 |
+
+
+#+begin_src sql
+call nouveau_joueur('balt','hazar', 'blth')
+#+end_src
+
+#+begin_src sql
+call authentification_joueur('balt','hazar', 'blth');
+#+end_src
+
+#+RESULTS:
+| retour |
+|--------|
+|      1 |
+
+#+begin_src sql
+call authentification_joueur('balt','hazar', 'bilith');
+#+end_src
+
+#+RESULTS:
+| retour |
+|--------|
+|      0 |
