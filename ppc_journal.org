@@ -33,6 +33,7 @@ npm install drizzle-orm mysql2
 npx shadcn-ui@latest init
 npm install -D drizzle-kit
 npm install next-auth@beta @auth/drizzle-adapter
+npx auth secret
 
 * Algo pierre, papier, ciseaux
 
