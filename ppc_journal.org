@@ -34,6 +34,7 @@ npx shadcn-ui@latest init
 npm install -D drizzle-kit
 npm install next-auth@beta @auth/drizzle-adapter
 npx auth secret
+npm install zod
 
 * Algo pierre, papier, ciseaux
 
@@ -290,6 +291,7 @@ Erreur P1001 Can't reach database server at `localhost`:`3306`
 
 
 ** Authentification : Auth.js
+Nécessité d'ajouter deux tables : session et verificationToken
 
 * Interface
 Icones

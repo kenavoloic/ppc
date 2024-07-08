@@ -36,6 +36,15 @@ FOREIGN KEY (joueur) REFERENCES joueurs(joueurId) ON UPDATE CASCADE
 
 #+end_src
 
+#+begin_src sql
+drop table if exists enregistrementSession;
+create table enregistrementSession(
+
+);
+
+#+end_src
+
+
 #+RESULTS:
 |---|
 
@@ -371,3 +380,4 @@ call authentification_joueur('balt','hazar', 'bilith');
 | retour |
 |--------|
 |      0 |
+
