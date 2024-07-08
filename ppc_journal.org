@@ -31,6 +31,8 @@ npm install @nextui-org/react (?)
 npx create-next-app@latest ./ --ts --use-npx
 npm install drizzle-orm mysql2
 npx shadcn-ui@latest init
+npm install -D drizzle-kit
+npm install next-auth@beta @auth/drizzle-adapter
 
 * Algo pierre, papier, ciseaux
 
@@ -249,7 +251,7 @@ id,prenom,nom,points
 
 ** Schéma sql
 
-#+begin_src sql :tangle pierrePapierCiseaux.sql
+#+begin_src sql
 
 USE pierre_papier_ciseaux;
 
@@ -263,12 +265,12 @@ motpasse varchar(255) NOT NULL
 
 DROP TABLE IF EXISTS scores;
 CREATE TABLE scores (
-id INT,
+id INT AUTO_INCREMENT PRIMARY KEY,
+joueur INT   
 points INT NOT NULL DEFAULT 0,
-FOREIGN KEY (id) REFERENCES joueurs(joueurId)
+FOREIGN KEY (joueur) REFERENCES joueurs(joueurId)
 );
 
-INSERT INTO joueurs VALUES (prenom, mon) VALUES
 
 INSERT INTO joueurs values (prenom, nom) values ("Maxime","Lamothe"),("Romain","Latterrade"),("Ugo","Boniface"),("Sipili","Falatea"),("Matis","Perchaud"),("Jefferson","Poirot"),("Carlü","Sadie"),("Ben","Tameifuna"),("Cyril","Cazeaux"),("Adam","Coleman"),("Jonny","Gray"),("Guido","Petti"),("Alexandre","Ricard"),("Pierre","Bochaton"),("Mahamadou","Diaby"),("Marko","Gazzotti"),("Pete","Samu"),("Lachlan","Swinton"),("Tevita","Tatafu"),("Bastien","Vergnes-Taillefer"),("Paul","Abadie"),("Yann","Lesgourgues"),("Maxime","Lucu"),("Joey","Carbery"),("Mateo","Garcia"),("Matthieu","Jalibert"),("Nicolas","Depoortère"),("Rohan","Janse van Rensburg"),("Yoram","Moefana"),("Ben","Tapuai"),("Pablo","Uberti"),("Tani","Vili"),("Louis","Bielle-Biarrey"),("Nans","Ducuing"),("Damian","Penaud"),("Enzo","Reybier"),("Romain","Buros");
 
@@ -284,6 +286,9 @@ Il servira également pour l'authentification.
 
 ** Finalement drizzle, car difficulté d'installation de prisma
 Erreur P1001 Can't reach database server at `localhost`:`3306`
+
+
+** Authentification : Auth.js
 
 * Interface
 Icones
