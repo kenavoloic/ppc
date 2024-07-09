@@ -4,7 +4,8 @@ import './globals.css'
 
 //const inter = Inter({ subsets: ['latin'] })
 
-import { cn }  from "@/lib/utils"
+//import { cn }  from "@/lib/utils"
+import { cn }  from "@lib/utils"
 
 const fontSans = FontSans({
     subsets: ["latin"],

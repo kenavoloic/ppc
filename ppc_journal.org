@@ -311,3 +311,15 @@ En plus un quatrième bouton indiquant la victoire ou la défaite
 heroicons/react pour les autres icones
 
 finalement shadcn
+
+* Structure
+
+** tsconfig.json
+
+https://blog.logrocket.com/using-path-aliases-cleaner-react-typescript-imports/
+
+Ajout de baseUrl
+Ajout d'alias
+
+** .env
+Ajout des identifiants de la bdd

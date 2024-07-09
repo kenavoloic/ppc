@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import {ZodError} from "zod"
-import {signInSchema} from "./lib/zod"
+import {signInSchema} from "@/lib/zod"
 import Credentials from "next-auth/providers/credentials"
 import {saltAndHashPassword} from "@/utils/password"
 import {getUserFromDb} from "@/utils/db"
