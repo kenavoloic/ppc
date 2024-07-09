@@ -294,8 +294,10 @@ Erreur P1001 Can't reach database server at `localhost`:`3306`
 Nécessité d'ajouter deux tables : session et verificationToken
 
 * Interface
-Icones
+** Icones
 https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissors.svg
+
+https://creazilla.com/media/clipart/7794817/rock-paper-scissors-lizard-spock
 
 U+1F44D 👍
 U+1F44E 👎
