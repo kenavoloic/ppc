@@ -6,22 +6,10 @@ export function SignIn(){
 	    "use server"
 	    await signIn("credentials", formData)
 	}}>
-	    <label>
-	    Nom
-	    <input name="nom" type="text" />
-	    </label>
-
-	    <label>
-	Prénom
-	    <input name="prenom" type="text" />
-	</label>
-	
-	    <label>
-	Mot de passe
-	    <input name="motpasse" type="password" />
-	</label>
+	    <label>Nom<input name="nom" type="text" /></label>
+	    <label>Prénom<input name="prenom" type="text" /></label>	
+	    <label>Mot de passe<input name="motpasse" type="password" /></label>
 	    <button>Sign In</button>
-
 	    </form>
     )
 };
