@@ -36,6 +36,11 @@ npm install next-auth@beta @auth/drizzle-adapter
 npx auth secret
 npm install zod
 npx shadcn-ui@latest add button
+npx shadcn-ui@latest add toggle
+npx shadcn-ui@latest add toggle-group
+npx shadcn-ui@latest add table
+npx shadcn-ui@latest add form
+
 
 
 * Algo pierre, papier, ciseaux
@@ -301,8 +306,36 @@ https://en.wikipedia.org/wiki/Rock_paper_scissors#/media/File:Rock-paper-scissor
 
 https://creazilla.com/media/clipart/7794817/rock-paper-scissors-lizard-spock
 
-U+1F44D 👍
+
+lucide-react
+
+boutons + 
+--U+1F44D 👍--
 U+1F44E 👎
+
+#+begin_src typescript
+import {Button} from "@/components/ui/button"
+import {ThumbsUp, ThumbsDown} from "lucide-react"
+
+export default function Home() {
+    return (
+	<main className="flex bg-indigo-500 min-h-screen flex-col items-center justify-between p-24">
+
+	    <Button variant="outline" size="icon">
+	    <ThumbsUp className="h-4 w-4" />
+	    </Button>
+
+	    <Button variant="outline" size="icon">
+	    <ThumbsDown className="h-4 w-4"  />
+	    </Button>
+
+	    </main>
+	    
+    );
+};
+
+
+#+end_src
 
 Ou alors couleurs pour signaler le vainqueur
 
