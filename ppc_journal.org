@@ -35,6 +35,8 @@ npm install -D drizzle-kit
 npm install next-auth@beta @auth/drizzle-adapter
 npx auth secret
 npm install zod
+npx shadcn-ui@latest add button
+
 
 * Algo pierre, papier, ciseaux
 
