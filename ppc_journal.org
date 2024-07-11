@@ -40,6 +40,7 @@ npx shadcn-ui@latest add toggle
 npx shadcn-ui@latest add toggle-group
 npx shadcn-ui@latest add table
 npx shadcn-ui@latest add form
+npx shadcn-ui@latest add input
 
 
 
