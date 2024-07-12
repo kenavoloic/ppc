@@ -41,6 +41,10 @@ npx shadcn-ui@latest add toggle-group
 npx shadcn-ui@latest add table
 npx shadcn-ui@latest add form
 npx shadcn-ui@latest add input
+npm install next-themes
+npx shadcn-ui@latest add dropdown-menu
+npx shadcn-ui@latest add navigation-menu
+
 
 
 

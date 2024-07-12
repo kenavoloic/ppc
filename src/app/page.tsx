@@ -12,13 +12,13 @@ import Chifoumi from '@components/chifoumi';
 //import {FormulaireConnexion, ProfileForm} from '@components/connexion';
 import {Connexion} from '@components/connexion';
 import {Enregistrement} from '@components/enregistrement';
+import Barre from '@components/barre';
 
 export default function Home() {
   return (
-    <main className="flex bg-indigo-500 min-h-screen flex-col items-center justify-between p-24">
-      <Connexion />
-      <Enregistrement />
-    </main>
+        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <Barre />
+	</main>
 	    
   );
 }

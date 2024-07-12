@@ -25,8 +25,9 @@ export function Enregistrement(){
   }
   
   return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md w-full flex flex-col gap-4 border-2 rounded px-3 py-5">
 	<FormField
 	  control={form.control}
           name="nom"
@@ -91,6 +92,7 @@ export function Enregistrement(){
 
       </form>
     </Form>
+    </main>
   );
 
 }

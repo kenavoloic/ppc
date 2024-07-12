@@ -5,52 +5,11 @@ import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, Form
 import {Input} from "@ui/input";
 import {Button} from "@ui/button";
 
-
-const formSchema = z.object({
-username: z.string().min(2).max(50),
-});
-
 const formulaireSchema = z.object({
   nom: z.string().min(1, {message: "Au moins une lettre."}).max(50),
   prenom: z.string().min(2, {message: "Au moins deux lettres."}).max(50),
   motpasse: z.string().min(3, {message: "Au moins trois caractères."}).max(50),
 });
-
-export function ProfileForm(){
-const form = useForm<z.infer<typeof formSchema>>({
-  resolver: zodResolver(formSchema),
-  defaultValues: {username: "Alabama",},
-})
-
-function onSubmit(values: z.infer<typeof formSchema>){
-  console.log(values);
-}
-
-    return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-  )
-
-};
 
 export function Connexion(){
   const form = useForm<z.infer<typeof formulaireSchema>>({
@@ -63,8 +22,9 @@ export function Connexion(){
   }
   
   return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md w-full flex flex-col gap-4 border-2 rounded px-3 py-5">
 	<FormField
 	  control={form.control}
           name="nom"
@@ -72,7 +32,7 @@ export function Connexion(){
             <FormItem>
               <FormLabel>Nom</FormLabel>
               <FormControl>
-                <Input placeholder="connexion-nom" {...field} />
+                <Input placeholder="Nom" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,7 +47,7 @@ export function Connexion(){
             <FormItem>
               <FormLabel>Prénom</FormLabel>
               <FormControl>
-                <Input placeholder="connexion-prenom" {...field} />
+                <Input placeholder="Prénom" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,7 +62,7 @@ export function Connexion(){
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <Input placeholder="connexion-motpasse" {...field} />
+                <Input type="password" placeholder="Mot de passe" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,6 +74,7 @@ export function Connexion(){
 
       </form>
     </Form>
+      </main>
   );
 
 }
