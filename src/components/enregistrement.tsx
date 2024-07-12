@@ -10,13 +10,14 @@ const formulaireSchema = z.object({
   prenom: z.string().min(2, {message: "Au moins deux lettres."}).max(50),
   motpasse: z.string().min(3, {message: "Au moins trois caractères."}).max(50),
   motpasse2: z.string(),
-}).refine((x) => x.motpasse === motpasse2, {message: "Les mots de passe ne sont pas identiques."});
+}).refine((x) => x.motpasse === x.motpasse2, {message: "Les mots de passe ne sont pas identiques.", path: ["motpasse2"]});
 
 
 export function Enregistrement(){
   const form = useForm<z.infer<typeof formulaireSchema>>({
     resolver: zodResolver(formulaireSchema),
-    defaultValues: {nom: "hazar", prenom:"balt", motpasse: "blth", motpasse2: "blth",}
+    defaultValues: {nom: "", prenom:"", motpasse: "", motpasse2: "",},
+    //defaultValues: {nom: "hazar", prenom:"balt", motpasse: "blth", motpasse2: "blth",}
   });
 
   function onSubmit(values: z.infer<typeof formulaireSchema>){
@@ -33,7 +34,7 @@ export function Enregistrement(){
             <FormItem>
               <FormLabel>Nom</FormLabel>
               <FormControl>
-                <Input placeholder="enregistrement-nom" {...field} />
+                <Input placeholder="Nom" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -48,7 +49,7 @@ export function Enregistrement(){
             <FormItem>
               <FormLabel>Prénom</FormLabel>
               <FormControl>
-                <Input placeholder="enregistrement-prenom" {...field} />
+                <Input placeholder="Prénom" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,7 +64,7 @@ export function Enregistrement(){
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="enregistrement-motpasse" {...field} />
+                <Input type="password" placeholder="Mot de passe" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +79,7 @@ export function Enregistrement(){
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="enregistrement-motpasse2" {...field} />
+                <Input type="password" placeholder="Mot de passe" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
