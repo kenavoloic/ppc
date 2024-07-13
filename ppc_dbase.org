@@ -155,9 +155,9 @@ CREATE PROCEDURE classement(IN nombre INT)
 BEGIN
 
 IF nombre > 0 THEN
-SELECT rank() over (order by points desc)  as 'Classement', s.points as 'Score', j.nom as 'Noms', j.prenom as 'Prénoms' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc limit nombre;
+SELECT rank() over (order by points desc)  as 'classement', s.points as 'score', j.nom as 'nom', j.prenom as 'prenom' from scores s inner join joueurs j on s.joueur = j.joueurId order by s.points desc, j.nom asc limit nombre;
 ELSEIF nombre < 1 THEN
-SELECT RANK() OVER (ORDER BY points DESC)  AS 'Classement', s.points AS 'Score', j.nom AS 'Noms', j.prenom AS 'Prénoms' FROM scores s INNER JOIN joueurs j ON s.joueur = j.joueurId ORDER BY s.points DESC, j.nom ASC LIMIT 10;
+SELECT RANK() OVER (ORDER BY points DESC)  AS 'classement', s.points AS 'score', j.nom AS 'nom', j.prenom AS 'prenom' FROM scores s INNER JOIN joueurs j ON s.joueur = j.joueurId ORDER BY s.points DESC, j.nom ASC LIMIT 10;
 END IF;
 END;
 $$
@@ -381,3 +381,181 @@ call authentification_joueur('balt','hazar', 'bilith');
 |--------|
 |      0 |
 
+
+#+begin_src sql
+DROP PROCEDURE IF EXISTS chifoumi;
+
+DELIMITER $$
+
+CREATE PROCEDURE chifoumi(IN joueur INT, IN ordinateur INT)
+       
+BEGIN
+
+DECLARE retour1 TINYINT(1) DEFAULT 0;
+DECLARE retour2 TINYINT(1) DEFAULT 0;
+
+IF joueur = ordinateur THEN
+SET retour1 = 1;
+SET retour2 = 1;
+
+ELSEIF joueur = 0 AND ordinateur = 1 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 1 AND ordinateur = 0 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSEIF joueur = 0 AND ordinateur = 2 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSEIF joueur = 2 AND ordinateur = 0 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 1 AND ordinateur = 2 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 2 AND ordinateur = 1 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSE
+SET retour1 = 1;
+SET retour2 = 1;
+
+END IF;
+
+select retour1, retour2;    
+END;
+$$
+
+
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+call chifoumi(1,2);
+
+#+end_src
+
+#+RESULTS:
+| retour1 | retour2 |
+|---------+---------|
+|       0 |       1 |
+
+#+begin_src sql
+drop procedure chifoumiJson;
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+DROP FUNCTION IF EXISTS chifoumiJson;
+
+DELIMITER $$
+
+CREATE FUNCTION chifoumiJson(IN joueur INT, IN ordinateur INT) RETURNS JSON CONTAINS SQL DETERMINISTIC
+
+BEGIN
+
+DECLARE retour JSON;
+DECLARE retour1 TINYINT(1) DEFAULT 0;
+DECLARE retour2 TINYINT(1) DEFAULT 0;
+
+IF joueur = ordinateur THEN
+SET retour1 = 1;
+SET retour2 = 1;
+
+ELSEIF joueur = 0 AND ordinateur = 1 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 1 AND ordinateur = 0 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSEIF joueur = 0 AND ordinateur = 2 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSEIF joueur = 2 AND ordinateur = 0 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 1 AND ordinateur = 2 THEN
+SET retour1 = 0;
+SET retour2 = 1;
+
+ELSEIF joueur = 2 AND ordinateur = 1 THEN
+SET retour1 = 1;
+SET retour2 = 0;
+
+ELSE
+SET retour1 = 1;
+SET retour2 = 2;
+
+END IF;
+
+SET retour = (SELECT JSON_ARRAYAGG(JSON_OBJECT('joueur',retour1,'ordinateur',retour2)));
+
+RETURN retour;
+END;
+$$
+
+
+	
+
+#+end_src
+
+#+begin_src sql
+select chifoumiJson(1,2);	
+
+#+end_src
+
+#+RESULTS:
+| chifoumiJson(1,2)                    |
+|--------------------------------------|
+| [{"joueur": "0", "ordinateur": "1"}] |
+
+
+#+begin_src sql
+call classement(10);	
+
+#+end_src
+
+#+RESULTS:
+| Classement | Score | Noms              | Prénoms   |
+|------------+-------+-------------------+-----------|
+|          1 |    23 | balt              | hazar     |
+|          2 |    10 | bielle-biarrey    | louis     |
+|          2 |    10 | perchaud          | matis     |
+|          4 |     9 | bochaton          | pierre    |
+|          4 |     9 | buros             | romain    |
+|          4 |     9 | cazeaux           | cyril     |
+|          4 |     9 | depoortère        | nicolas   |
+|          4 |     9 | diaby             | mahamadou |
+|          4 |     9 | vergnes-taillefer | bastien   |
+|         10 |     8 | ducuing           | nans      |
+
+#+begin_src sql
+DROP PROCEDURE IF EXISTS liste_joueurs;
+
+DELIMITER $$
+CREATE PROCEDURE liste_joueurs()
+
+BEGIN
+SELECT joueurId, nom, prenom FROM joueurs ORDER BY nom DESC;
+
+END;
+$$	
+
+#+end_src
+
+#+RESULTS:
+|---|

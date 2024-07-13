@@ -1,0 +1,6 @@
+{
+"dialect": "mysql",
+"out":"./migrations-folder",
+  "schame":"./src/lib/db",
+  "breakpoints": false
+}

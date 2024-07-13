@@ -9,22 +9,22 @@ import {ModeToggle} from "@components/modeToggle";
 
 const  Barre = () => {
   return (
-    <div className="bg-primary dark:bg-slate-700 text-white p-2 flex justify-between rounded-lg ">
-      <div className="w-full">
+    <div className="bg-primary dark:bg-slate-700 text-white p-2 flex justify-between">
+      <div className="w-full flex justify-between">
 
 	<NavigationMenu className="flex justify-between">
 	  <NavigationMenuList>
 	  <NavigationMenuItem>
-  <Link href="/" legacyBehavior passHref>
+  <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
       <House className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2"/>
-      <span className="hidden md:flex md:text-black md:dark:text-white">Accueil</span>
+      <span className="hidden md:flex md:text-black md:dark:text-white">Home</span>
     </NavigationMenuLink>
   </Link>
 </NavigationMenuItem>
 
 	  <NavigationMenuItem>
-  <Link href="/" legacyBehavior passHref>
+  <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
       <ThumbsUp className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2" />
       <span className="hidden md:flex md:text-black md:dark:text-white">Register</span>
@@ -34,7 +34,7 @@ const  Barre = () => {
 
   
 	  <NavigationMenuItem>
-  <Link href="/" legacyBehavior passHref>
+  <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
       <LogIn className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2" />
       <span className="hidden md:flex md:text-black md:dark:text-white">Login</span>
@@ -44,22 +44,20 @@ const  Barre = () => {
 
 
 	  <NavigationMenuItem>
-  <Link href="/" legacyBehavior passHref>
+  <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
       <LogOut className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2" />
       <span className="hidden md:flex md:text-black md:dark:text-white">Logout</span>
     </NavigationMenuLink>
   </Link>
 </NavigationMenuItem>
-
-  	  <NavigationMenuItem>
-    <ModeToggle />	
-    	  </NavigationMenuItem>
 	  
 </NavigationMenuList>
 	  
 	  </NavigationMenu>
       </div>
+
+          <ModeToggle />	
     </div>
     
   );

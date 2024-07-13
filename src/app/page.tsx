@@ -1,12 +1,6 @@
-"use client";
+//"use client";
 
 import Image from 'next/image'
-import {Button} from '@ui/button';
-import {Input} from '@ui/input';
-import {Label} from '@ui/label';
-import {Toggle} from '@ui/toggle';
-import {ToggleGroup, ToggleGroupItem} from '@ui/toggle-group';
-import {ThumbsUp, ThumbsDown} from "lucide-react"
 import Chifoumi from '@components/chifoumi';
 //import Connexion from '@components/connexion';
 //import {FormulaireConnexion, ProfileForm} from '@components/connexion';
@@ -14,11 +8,32 @@ import {Connexion} from '@components/connexion';
 import {Enregistrement} from '@components/enregistrement';
 import Barre from '@components/barre';
 
-export default function Home() {
+import pool from "@lib/db/config";
+
+    // <header className="fixed top-0 w-full z-50">
+    //   <Barre />
+    // </header>
+
+
+async function Liste(){
+  let res = await fetch('https://localhost:3000/api/');
+  let joueurs = await res.json();
   return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    <Barre />
-	</main>
-	    
+<ul>
+  {joueurs.map((x) => (
+<li key={x.joueurId}>{x.nom}</li>
+  ))}
+</ul>
+  );
+};
+
+export default function Home() {
+
+  
+
+  return (
+    <>
+    <Liste />
+    </>
   );
 }
