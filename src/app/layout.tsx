@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter as FontSans} from 'next/font/google';
 import './globals.css';
 import {ThemeProvider} from "@components/theme-provider";
-
+import {EtatsContextProvider} from "@components/etatsProvider";
 import { cn }  from "@lib/utils";
 
 const fontSans = FontSans({
@@ -27,7 +27,9 @@ export default function RootLayout({
       <head />
 	  <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
   <ThemeProvider attribute="class" defaultTheme="System" enableSystem disabledTransitionOnChange >
+    <EtatsContextProvider>
 	  {children}
+    </EtatsContextProvider>
   </ThemeProvider>
       </body>
     </html>
