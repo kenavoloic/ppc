@@ -1,28 +1,48 @@
-import {useContext, useRef, useState} from "react";
+import {useContext} from "react";
 import Image from 'next/image';
 import {ThumbsUp, ThumbsDown, CircleHelp} from "lucide-react";
-import {Etats} from "@types/Etats";
 import {Button} from "@components/ui/button";
+import {useEtats} from "@components/etatsProvider";
 
-const Bouton = ({source, alternatif, valeur, actif_p, fonction, desactive}) => {
+const Bouton = ({source, alternatif, valeur, actif_p, fonction, etat}) => {
+  const {choix, setChoix} = useEtats();
+
+  //setChoix(parseInt(valeur));
+  
   const changement = () => {
-    fonction(number(valeur));
+    //console.log('bouton',  choix);
+    console.log(etat, !etat, actif_p);
+    setChoix(valeur);    
+    fonction(!etat);
+    //console.log(valeur, actif_p);
   };
-
+  
   return (
     <Button
-      onClick={() => fonction(parseInt(valeur))}
+      onClick={() => changement()}
       variant="outline"
-      className = "text-white  border-2 m-4 hover:bg-blue-500 disabled:opacity-100"
+      className = "text-white  border-2 m-4 hover:bg-blue-500 "
       className = {actif_p ? "bg-white" : "bg-red-500"}
-      disabled={desactive}
     >
       <Image src={source} alt={alternatif}  width={40} height={40}  />
     </Button>
   );
 };
 
-export default Bouton;
+const BoutonDesactive = ({source, alternatif, actif_p}) => {
+  return (
+    <Button
+      disabled={true}
+      variant="outline"
+      className = "text-white  border-2 m-4 hover:bg-blue-500 disabled:opacity-100"
+      className = {actif_p ? "bg-white" : "bg-red-500"}
+    >
+      <Image src={source} alt={alternatif}  width={40} height={40}  />
+    </Button>
+  );
+};
+
+export {Bouton, BoutonDesactive};
 
 
 

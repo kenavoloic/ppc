@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {Button} from "@components/ui/button";
-import { House, LogIn, LogOut, ThumbsUp, Trophy } from "lucide-react"
+import { Dices, House, LogIn, LogOut, ThumbsUp, Trophy } from "lucide-react"
 import {NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLabel, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle} from "@components/ui/navigation-menu";
 
 import Link from "next/link";
@@ -17,12 +17,23 @@ const  Barre = () => {
 	  <NavigationMenuItem>
   <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-      <House className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2"/>
+      <Trophy className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2"/>
       <span className="hidden md:flex md:text-black md:dark:text-white">Home</span>
     </NavigationMenuLink>
   </Link>
 </NavigationMenuItem>
 
+  	  <NavigationMenuItem>
+  <Link href="#" legacyBehavior passHref>
+    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+      <Dices className="flex text-black dark:text-white md:hidden lg:flex lg:mr-2"/>
+      <span className="hidden md:flex md:text-black md:dark:text-white">Chifoumi</span>
+    </NavigationMenuLink>
+  </Link>
+</NavigationMenuItem>
+
+
+  
 	  <NavigationMenuItem>
   <Link href="#" legacyBehavior passHref>
     <NavigationMenuLink className={navigationMenuTriggerStyle()}>

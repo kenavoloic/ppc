@@ -3,6 +3,7 @@ import { Inter as FontSans} from 'next/font/google';
 import './globals.css';
 import {ThemeProvider} from "@components/theme-provider";
 import {EtatsContextProvider} from "@components/etatsProvider";
+import Barre from "@components/barre";
 import { cn }  from "@lib/utils";
 
 const fontSans = FontSans({
@@ -13,8 +14,6 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
     title: 'Pierre, papier, ciseaux',
     description: 'Chifoumi',
-    //themeColor: [{media: "(prefers-color-scheme: dark)", color: "#fff"}],
-    //viewport: "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover, prefers-color-scheme=dark, color=#fff"
 };
 
 export default function RootLayout({
@@ -28,7 +27,8 @@ export default function RootLayout({
 	  <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
   <ThemeProvider attribute="class" defaultTheme="System" enableSystem disabledTransitionOnChange >
     <EtatsContextProvider>
-	  {children}
+      <Barre />
+	  <main className="container w-full flex flex-col justify-between items-center">{children}</main>
     </EtatsContextProvider>
   </ThemeProvider>
       </body>
