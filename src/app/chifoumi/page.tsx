@@ -10,7 +10,8 @@ import Image from 'next/image'
 // import Poussoirs04 from '@components/poussoirs04';
 // import Poussoirs05 from '@components/poussoirs05';
 // import Poussoirs06 from '@components/poussoirs06';
-import Poussoirs07 from '@components/poussoirs07';
+//import Poussoirs07 from '@components/poussoirs07';
+import Poussoirs08 from '@components/poussoirs08';
 // import {Connexion} from '@components/connexion';
 // import {Enregistrement} from '@components/enregistrement';
 // import Barre from '@components/barre';
@@ -21,7 +22,7 @@ import Poussoirs07 from '@components/poussoirs07';
 
 export default function Jeu() {
   return (
-      <Poussoirs07  />
+      <Poussoirs08  />
   );
 }
 

@@ -45,10 +45,10 @@ import {getClassement} from "@actions/getClassement";
 import {capitale} from "@lib/utils";
 
 export default async function Accueil(){
-  const  liste = await getClassement(20);
+  const  liste = await getClassement(10);
   
   return (
-    <Table className="w-full border p-4">
+    <Table className="w-full border p-4 bg-secundary-500">
       <TableHeader className="bg-white text-black">
 	<TableRow>
 	  <TableHead className="hidden text-left md:table-cell md:text-center">Rang</TableHead>
@@ -59,7 +59,7 @@ export default async function Accueil(){
       </TableHeader>
       <TableBody>
 	{liste[0].map((x:Score, index:number) => (
-	  <TableRow key={x.joueurId}>
+	  <TableRow key={index} className="hover:bg-green-600 hover:text-white">
 	    <TableCell className="hidden md:table-cell text-center">{index+1}</TableCell>
 	  <TableCell className="hidden md:table-cell text-left">{capitale(x.nom)}</TableCell>
 	  <TableCell className="text-left">{capitale(x.prenom)}</TableCell>

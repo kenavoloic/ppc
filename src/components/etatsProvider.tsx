@@ -14,7 +14,8 @@ export const EtatsContextProvider = ({children} : {children: React.ReactNode}) =
   //const [valeurs, setValeurs] = useState(vierge);
   //const [valeurs] = useState(defaite1);
 
-  const valeurs = etats_initiaux;
+  //const valeurs = etats_initiaux;
+  const valeurs = defaite1;
 
   const [joueurId, setJoueurId] = useState(valeurs.joueurId);
   const [joueurNom, setJoueurNom] = useState(valeurs.joueurNom);

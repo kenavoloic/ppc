@@ -28,7 +28,7 @@ export default function RootLayout({
   <ThemeProvider attribute="class" defaultTheme="System" enableSystem disabledTransitionOnChange >
     <EtatsContextProvider>
       <Barre />
-	  <main className="container w-full flex flex-col justify-between items-center">{children}</main>
+	  <main className="container w-full min-h-screen mb-4 flex flex-col justify-between items-center">{children}</main>
     </EtatsContextProvider>
   </ThemeProvider>
       </body>

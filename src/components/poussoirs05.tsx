@@ -13,9 +13,6 @@ const Poussoirs05 = () => {
   
   const [choix, setChoix] = useState<number | null>(null);
   const changement = (valeur: number) => {
-    //console.log(e.target.value);
-    //console.log(e.target.value);
-    //e.target.backgroundColor="white";
     setChoix(valeur);
   };
 
@@ -29,7 +26,7 @@ const Poussoirs05 = () => {
   <Bouton source={"/images/svg/a_papier.svg"} alt={"Papier"}  desactive={false} valeur="1" actif_p={choix === 1}   fonction={changement} />
   <Bouton source={"/images/svg/a_ciseaux.svg"} alt={"Ciseaux"}  desactive={false} valeur="2" actif_p={choix === 2} fonction={changement}  />
 
-  <VND />
+  <VND resultat={"v"}/>
 </div>
 
       <h2>Ordinateur</h2>
@@ -38,7 +35,7 @@ const Poussoirs05 = () => {
 	<Bouton source={"/images/svg/b_papier.svg"} alt={"Papier"}  desactive={true} valeur="4" actif_p={choix === 4}   fonction={changement} />
 	<Bouton source={"/images/svg/b_ciseaux.svg"} alt={"Ciseaux"}  desactive={true} valeur="5" actif_p={choix === 5} fonction={changement}  />
 
-  <VND />
+  <VND resultat={"d"} />
 </div>
 
     </div>
