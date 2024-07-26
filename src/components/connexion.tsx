@@ -1,9 +1,10 @@
+"use client";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@ui/form";
-import {Input} from "@ui/input";
-import {Button} from "@ui/button";
+import {Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from "@components/ui/form";
+import {Input} from "@components/ui/input";
+import {Button} from "@components/ui/button";
 
 const formulaireSchema = z.object({
   nom: z.string().min(1, {message: "Au moins une lettre."}).max(50),
@@ -11,7 +12,7 @@ const formulaireSchema = z.object({
   motpasse: z.string().min(3, {message: "Au moins trois caractères."}).max(50),
 });
 
-export function Connexion(){
+function Connexion(){
   const form = useForm<z.infer<typeof formulaireSchema>>({
     resolver: zodResolver(formulaireSchema),
     defaultValues: {nom: "Hazar", prenom:"Balt", motpasse: "blth",}
@@ -22,9 +23,10 @@ export function Connexion(){
   }
   
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+   
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-md w-full flex flex-col gap-4 border-2 rounded px-3 py-5">
+	
 	<FormField
 	  control={form.control}
           name="nom"
@@ -74,10 +76,11 @@ export function Connexion(){
 
       </form>
     </Form>
-      </main>
+
   );
 
 }
 
 
 
+export default Connexion;

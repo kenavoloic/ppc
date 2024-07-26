@@ -45,10 +45,10 @@ import {getClassement} from "@actions/getClassement";
 import {capitale} from "@lib/utils";
 
 export default async function Accueil(){
-  const  liste = await getClassement(10);
+  const  liste = await getClassement(20);
   
   return (
-    <Table className="w-full bg-blue-300 border border-gray-200 mx-2 rounded">
+    <Table className="w-full border p-4">
       <TableHeader className="bg-white text-black">
 	<TableRow>
 	  <TableHead className="hidden text-left md:table-cell md:text-center">Rang</TableHead>
