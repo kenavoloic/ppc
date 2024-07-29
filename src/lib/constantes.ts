@@ -33,7 +33,7 @@ export const victoire1: Etats = {
   joueurResultat: 'v',
   joueurNom: "Balt",
   joueurId: 43,
-  joueurPoints: 1,
+  joueurPoints: 13,
   ordinateurPierre: true,
   ordinateurPapier: false,
   ordinateurCiseaux: false,
@@ -47,7 +47,7 @@ export const defaite1: Etats = {
   joueurResultat: 'd',
   joueurNom: "Balt",
   joueurId: 43,
-  joueurPoints: -1,
+  joueurPoints: -21,
   ordinateurPierre: true,
   ordinateurPapier: false,
   ordinateurCiseaux: false,
@@ -62,9 +62,11 @@ export const defaite2: Etats = {
   joueurResultat: 'd',
   joueurNom: "Balt",
   joueurId: 43,
-  joueurPoints: -1,
+  joueurPoints: -14,
   ordinateurPierre: false,
   ordinateurPapier: false,
   ordinateurCiseaux: true,
   ordinateurResultat: 'v',
 };
+
+export const correspondances = {0: 'joueurPapier', 1: 'joueurPierre', 2: 'joueurCiseaux'};

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-//import Chifoumi from '@components/chifoumi';
+import Chifoumi from '@components/chifoumi';
 // import C02 from '@components/c02';
 // import C03 from '@components/c03';
 // import C04 from '@components/c04';
@@ -11,7 +11,8 @@ import Image from 'next/image'
 // import Poussoirs05 from '@components/poussoirs05';
 // import Poussoirs06 from '@components/poussoirs06';
 //import Poussoirs07 from '@components/poussoirs07';
-import Poussoirs08 from '@components/poussoirs08';
+//import Poussoirs09 from '@components/poussoirs08';
+//import Poussoirs10 from '@components/poussoirs10';
 // import {Connexion} from '@components/connexion';
 // import {Enregistrement} from '@components/enregistrement';
 // import Barre from '@components/barre';
@@ -22,7 +23,7 @@ import Poussoirs08 from '@components/poussoirs08';
 
 export default function Jeu() {
   return (
-      <Poussoirs08  />
+      <Chifoumi  />
   );
 }
 

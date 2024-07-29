@@ -45,6 +45,7 @@ import {getClassement} from "@actions/getClassement";
 import {capitale} from "@lib/utils";
 
 export default async function Accueil(){
+
   const  liste = await getClassement(10);
   
   return (
