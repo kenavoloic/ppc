@@ -1,6 +1,6 @@
 "use server";
 import pool from "@lib/db/pool";
-import {Score} from "@types/Score";
+//import {Score} from "@types/Score";
 
 export const getClassement = async (nombre: number): Promise<Score[]> => {
   try {

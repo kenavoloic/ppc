@@ -1,8 +1,8 @@
 "use client";
 
 import {createContext, useContext, useState, Dispatch, SetStateAction} from "react";
-import {Etats} from "@types/Etats";
-import {Trois} from "@types/Trois";
+//import {Etats} from "@types/Etats";
+//import {Trois} from "@types/Trois";
 import {etats_initiaux, victoire1, vierge, defaite1, defaite2} from "@lib/constantes";
 
 //const EtatsContext = createContext<Etats | undefined>(undefined);
@@ -17,6 +17,8 @@ export const EtatsContextProvider = ({children} : {children: React.ReactNode}) =
 
   //const valeurs = etats_initiaux;
   //const valeurs = defaite1;
+  // const [enCours, setEncours] = useState(false);
+  
   const [valeurs, setValeurs] = useState<Etats>(etats_initiaux);
 
   const [joueurId, setJoueurId] = useState(valeurs.joueurId);
@@ -35,9 +37,7 @@ export const EtatsContextProvider = ({children} : {children: React.ReactNode}) =
   const [ordinateurResultat, setOrdinateurResultat] = useState(valeurs.ordinateurResultat);
 
   const [choix, setChoix] = useState<number | null>(-1);
-   // const [choix, setChoix] = useState(null);
-  //setChoix(joueurPierre ? 0 : joueurPapier ? 1 : 2);
-
+  
   const [trois, setTrois] = useState<Trois>({"0": joueurPierre, "1": joueurPapier, "2": joueurCiseaux});
   
   return (

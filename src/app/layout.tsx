@@ -7,13 +7,13 @@ import Barre from "@components/barre";
 import { cn }  from "@lib/utils";
 
 const fontSans = FontSans({
-    subsets: ["latin"],
-    variable: "--font-sans",
+  subsets: ["latin"],
+  variable: "--font-sans",
 })
 
 export const metadata: Metadata = {
-    title: 'Pierre, papier, ciseaux',
-    description: 'Chifoumi',
+  title: 'Pierre, papier, ciseaux',
+  description: 'Chifoumi',
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
 	  <main className="container w-full min-h-screen mb-4 flex flex-col justify-between items-center">{children}</main>
     </EtatsContextProvider>
   </ThemeProvider>
-      </body>
+</body>
     </html>
   )
 }

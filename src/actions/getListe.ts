@@ -1,8 +1,8 @@
 "use server";
 //import {NextResponse} from "next/server";
 import pool from "@lib/db/pool";
-import {Joueur} from "@types/Joueur";
-import {Score} from "@types/Score";
+// import {Joueur} from "@types/Joueur";
+// import {Score} from "@types/Score";
 
 export const getClassement = async (): Promise<Score[]> => {
   try {

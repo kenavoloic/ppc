@@ -8,15 +8,10 @@ import {correspondances} from "@lib/constantes";
 import clsx from "clsx";
 
 const Bouton = ({source, alternatif, valeur, actif_p, fonction, etat, ppc}) => {
-  //const {valeurs, choix, setChoix, joueurPierre, joueurPapier, joueurCiseaux, trois} = useEtats();
+
   const {setChoix, valeurs, setValeurs} = useEtats();
 
-  //const data = useRef(valeurs);
   const _valeur: number = parseInt(valeur);
-  //console.log("ce bouton", ceBouton, correspondances[ceBouton]);
-
-  //  const {valeurs} = useContext(EtatsProvider);
-  //setChoix(parseInt(valeur));
   
   const changement = () => {
     //console.log('bouton',  choix);
