@@ -29,6 +29,7 @@ declare global {
 		joueurId: number;
 		nom: string;
 		prenom: string;
+		points: number;
 	};
 
 	interface Trois {

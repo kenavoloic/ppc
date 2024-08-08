@@ -559,3 +559,30 @@ $$
 
 #+RESULTS:
 |---|
+
+#+begin_src sql
+
+DROP PROCEDURE IF EXISTS get_joueur;
+
+DELIMITER $$
+CREATE PROCEDURE get_joueur(_joueurId INT)
+
+BEGIN
+SELECT s.joueur as 'joueurId', j.nom as 'nom', j.prenom as 'prenom', s.points as 'points' FROM scores s inner join joueurs j  on s.joueur = j.joueurId where s.joueur = _joueurId LIMIT 1;
+END;
+$$        	       	       
+#+end_src
+
+#+RESULTS:
+|---|
+
+#+begin_src sql
+
+call get_joueur(26);
+#+end_src
+
+#+RESULTS:
+| joueurId | nom      | prenom   | points |
+|----------+----------+----------+--------|
+|       26 | jalibert | matthieu |      2 |
+

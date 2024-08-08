@@ -14,8 +14,9 @@ import {
   TableRow,
 } from "@components/ui/table"
 
-import {Score} from "@types/Score";
+//import {Score} from "@types/Score";
 import {getClassement} from "@actions/getClassement";
+import {getJoueur} from "@actions/getJoueur";
 
 import {capitale} from "@lib/utils";
 
@@ -24,6 +25,7 @@ export default async function Accueil(){
   const  liste = await getClassement(10);
   
   return (
+    
     <Table className="w-full border p-4 bg-secundary-500">
       <TableHeader className="bg-white text-black">
 	<TableRow>
