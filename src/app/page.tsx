@@ -16,13 +16,18 @@ import {
 
 //import {Score} from "@types/Score";
 import {getClassement} from "@actions/getClassement";
-import {getJoueur} from "@actions/getJoueur";
+import {testAction} from "@actions/testAction";
 
 import {capitale} from "@lib/utils";
+//import {useContext} from 'react';
+import {useEtats} from "@components/etatsProvider";
 
 export default async function Accueil(){
 
   const  liste = await getClassement(10);
+  //const {valeurs} = 
+  //testAction(19);
+  console.log(useEtats);
   
   return (
     

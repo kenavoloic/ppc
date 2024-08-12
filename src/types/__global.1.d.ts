@@ -1,4 +1,3 @@
-export {};
 
 declare global {
 	// Victoire, nul, défaite
@@ -38,12 +37,12 @@ declare global {
 		"2": boolean;
 	};
 
-	// interface PoussoirProps {
-	// 	source: string;
-	// 	alternatif: string;
-	// 	actif_p: boolean;
-	// 	fonction: () => void;
-	// };
+	interface PoussoirProps {
+		source: string;
+		alternatif: string;
+		actif_p: boolean;
+		fonction: () => void;
+	};
 
 	interface PoussoirDesactiveProps {
 		source: string;
@@ -51,21 +50,19 @@ declare global {
 		actif_p: boolean;
 	};
 
-	type Action =
-		| { type: 'joueurId'; payload: number }
-		| { type: 'joueurNom'; payload: string }
-		| { type: 'joueurPoints'; payload: number }
-		| { type: 'joueurPierre' }
-		| { type: 'joueurPapier' }
-		| { type: 'joueurCiseaux' }
-		| { type: 'joueurResultat'; payload: Resultat }
-		| { type: 'ordinateurPierre' }
-		| { type: 'ordinateurPapier' }
-		| { type: 'ordinateurCiseaux' }
-		| { type: 'ordinateurResultat'; payload: Resultat }
-		| { type: 'RAZ' }
-		| { type: 'MAJ'; payload: Partial<Etats>};
+	type Action = { type: 'joueurId'; payload: number; } |
+	{ type: 'joueurNom'; payload: string; } |
+	{ type: 'joueurPoints'; payload: number; } |
+	{ type: 'joueurPierre'; } |
+	{ type: 'joueurPapier'; } |
+	{ type: 'joueurCiseaux'; } |
+	{ type: 'joueurResultat'; payload: Resultat; } |
+	{ type: 'ordinateurPierre'; } |
+	{ type: 'ordinateurPapier'; } |
+	{ type: 'ordinateurCiseaux'; } |
+	{ type: 'ordinateurResultat'; payload: Resultat; } |
+	{ type: 'RAZ'; } |
+	{ type: 'MAJ'; payload: Partial<Etats>; };
 
-  type ReducteurTypeProps = Etats | Action;
 
-};
+}

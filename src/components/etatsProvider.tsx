@@ -7,7 +7,7 @@ import {etats_initiaux, victoire1, vierge, defaite1, defaite2} from "@lib/consta
 
 //const EtatsContext = createContext<Etats | undefined>(undefined);
 
-const EtatsContext = createContext();
+const EtatsContext = createContext({});
 
 export const EtatsContextProvider = ({children} : {children: React.ReactNode}) => {
   //const [valeurs, setValeurs] = useState(etats_initiaux);

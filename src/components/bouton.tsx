@@ -53,7 +53,32 @@ const BoutonDesactive = ({source, alternatif, actif_p}) => {
   );
 };
 
-export {Bouton, BoutonDesactive};
+
+const Poussoir = ({source, alternatif, actif_p}) => {
+
+  //const {setChoix, valeurs, setValeurs} = useEtats();
+
+  //const _valeur: number = parseInt(valeur);
+  
+  // const changement = () => {
+  //   setChoix(_valeur);    
+  //   fonction(true);
+  // };
+  
+  return (
+    <Button
+      size="lg"
+      variant="outline"
+      className = {clsx("text-white  border-2 hover:bg-blue-500 h-14", {"bg_white": actif_p, "bg-red-500": !actif_p})}
+    >
+      <Image src={source} alt={alternatif}  width={40} height={40}  className="m-4" />
+    </Button>
+  );
+};
+
+
+
+export {Bouton, BoutonDesactive, Poussoir};
 
 
 

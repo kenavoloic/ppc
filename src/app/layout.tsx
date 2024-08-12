@@ -3,6 +3,7 @@ import { Inter as FontSans} from 'next/font/google';
 import './globals.css';
 import {ThemeProvider} from "@components/theme-provider";
 import {EtatsContextProvider} from "@components/etatsProvider";
+import {XyzContextProvider} from "@components/xyz-provider";
 import Barre from "@components/barre";
 import { cn }  from "@lib/utils";
 
@@ -26,10 +27,12 @@ export default function RootLayout({
       <head />
 	  <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
   <ThemeProvider attribute="class" defaultTheme="System" enableSystem disabledTransitionOnChange >
+    <XyzContextProvider>
     <EtatsContextProvider>
       <Barre />
 	  <main className="container w-full min-h-screen mb-4 flex flex-col justify-between items-center">{children}</main>
     </EtatsContextProvider>
+    </XyzContextProvider>
   </ThemeProvider>
 </body>
     </html>
